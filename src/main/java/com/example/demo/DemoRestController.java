@@ -1,18 +1,26 @@
 package com.example.demo;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-public class DemoRestController implements DemoRestClient{
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-  @Override
-  public ResponseEntity<DemoObject> returnString() {
-    DemoObject build = DemoObject.builder().string("String").build();
-    build.add(linkTo(methodOn(DemoRestController.class).returnString()).withSelfRel());
-    return ResponseEntity.ok(build);
-  }
+@RestController
+public class DemoRestController implements DemoRestClient {
+
+    public DemoServiceImpl service;
+
+    @Autowired
+    public DemoRestController (final DemoServiceImpl demoService) {
+        this.service = demoService;
+    }
+
+    @Override
+    public ResponseEntity<DemoObject> returnString() {
+        DemoObject demoObject = service.getDemoObject();
+        demoObject.add(linkTo(methodOn(DemoRestController.class).returnString()).withSelfRel());
+        return ResponseEntity.ok(demoObject);
+    }
 }

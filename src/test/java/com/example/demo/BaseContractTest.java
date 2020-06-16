@@ -12,8 +12,8 @@ public class BaseContractTest {
   public void setup() {
     DemoObject build = DemoObject.builder().string("String").build();
 
-    DemoRestController demoRestController = BDDMockito.mock(DemoRestController.class);
-    BDDMockito.given(demoRestController.returnString()).willReturn(ResponseEntity.ok(build));
-    RestAssuredMockMvc.standaloneSetup(demoRestController);
+    DemoServiceImpl demoService = BDDMockito.mock(DemoServiceImpl.class);
+    BDDMockito.given(demoService.getDemoObject()).willReturn(build);
+    RestAssuredMockMvc.standaloneSetup(new DemoRestController(demoService));
   }
 }
